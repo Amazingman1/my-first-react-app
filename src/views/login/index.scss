@@ -16,10 +16,12 @@
     color: #fff;
     font-size: 16px;
     float: left;
+    margin-bottom: 0;
   }
-  span{
+  span {
     float: right;
     font-size: 12px;
     opacity: .3;
+    cursor: pointer;
   }
 }
