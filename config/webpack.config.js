@@ -289,6 +289,9 @@ module.exports = function(webpackEnv) {
         .map(ext => `.${ext}`)
         .filter(ext => useTypeScript || !ext.includes('ts')),
       alias: {
+        '@': path.resolve('src'),
+        '@c': path.resolve('src/components'),
+        '@api': path.resolve('src/api'),
         // Support React Native Web
         // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
         'react-native': 'react-native-web',
@@ -463,7 +466,15 @@ module.exports = function(webpackEnv) {
                   sourceMap: isEnvProduction && shouldUseSourceMap,
                 },
                 'sass-loader'
-              ),
+              ).concat({
+                loader: 'sass-resources-loader',
+                options: {
+                  resources: [
+                  // 这里按照你的文件路径填写
+                  path.resolve(__dirname, './../src/styles/main.scss')
+                ]
+              }
+            }),
               // Don't consider CSS imports dead code even if the
               // containing package claims to have no side effects.
               // Remove this when webpack adds a warning or an error for this.
@@ -503,6 +514,7 @@ module.exports = function(webpackEnv) {
             },
             // ** STOP ** Are you adding a new loader?
             // Make sure to add the new loader(s) before the "file" loader.
+            { test: /\.scss$/, loaders: ['style-loader', 'css-loader', 'sass-loader'],}
           ],
         },
       ],
