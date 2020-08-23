@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import './index.scss';
 import { Form, Input, Button, Row, Col } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { Login } from '@/api/account'
 
 class LoginForm extends Component {
   constructor(props){
@@ -10,6 +11,9 @@ class LoginForm extends Component {
   }
   onFinish = values => {
     console.log('Received values of form: ', values);
+    Login().then(res => {
+      console.log(res, '登陆')
+    })
   }
   toogleForm = () => {
     this.props.switchForm('regiest')
@@ -29,10 +33,20 @@ class LoginForm extends Component {
               initialValues={{ remember: true }}
               onFinish={this.onFinish}
             >
-              <Form.Item name="username" rules={[{ required: true, message: 'Please input your Username!' }]}>
-                <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
+              <Form.Item name="username" rules={
+                [
+                  { required: true, message: '用户名不能为空!' },
+                  { type: 'email', message: '请输入正确的邮箱!' }
+                ]
+              }>
+                <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="email" />
               </Form.Item>
-              <Form.Item name="password" rules={[{ required: true, message: 'Please input your password!' }]}>
+              <Form.Item name="password" rules={
+                [
+                  { required: true, message: '密码不能为空!' },
+                  { min: 6, message: "密码不能小于6位！" }
+                ]
+              }>
                 <Input prefix={<LockOutlined className="site-form-item-icon" />} placeholder="Password" />
               </Form.Item>
               <Form.Item name="password" rules={[{ required: true, message: 'Please input your password!' }]}>
