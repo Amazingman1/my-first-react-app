@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const service = axios.create({
-  baseURL: '/devApi',
+  baseURL: process.env.REACT_APP_API,
   timeout: 1000,
 })
 service.interceptors.request.use(

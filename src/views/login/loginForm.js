@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import './index.scss';
 import { Form, Input, Button, Row, Col } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import { Login } from '@/api/account'
+import { Login, GetCodeApi } from '@/api/account'
 
 class LoginForm extends Component {
   constructor(props){
@@ -17,6 +17,15 @@ class LoginForm extends Component {
   }
   toogleForm = () => {
     this.props.switchForm('regiest')
+  }
+  getCode = () => {
+    const data = {
+      usrname: '',
+      module: 'login'
+    }
+    GetCodeApi(data).then(res => {
+      console.log(res, '获取验证码')
+    })
   }
   render() {
     return (
@@ -51,11 +60,11 @@ class LoginForm extends Component {
               </Form.Item>
               <Form.Item name="password" rules={[{ required: true, message: 'Please input your password!' }]}>
                 <Row gutter={13}>
-                  <Col span={16}>
+                  <Col span={15}>
                     <Input prefix={<LockOutlined className="site-form-item-icon" />} placeholder="Code" />
                   </Col>
-                  <Col span={8}>
-                    <Button type="danger" block>获取验证码</Button>
+                  <Col span={9}>
+                    <Button type="danger" block onClick={ this.getCode }>获取验证码</Button>
                   </Col>
                 </Row>
               </Form.Item>

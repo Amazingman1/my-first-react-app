@@ -8,3 +8,11 @@ export function Login(data) {
     data
   })
 }
+// 获取验证码
+export function GetCodeApi(data) {
+  return request({
+    url: `/getSms/`,
+    method: 'post',
+    data
+  })
+}
