@@ -5,7 +5,6 @@ module.exports = function(app) {
     target: process.env.REACT_APP_BASE_URL,  //配置你要请求的服务器地址
     changeOrigin: true,
     pathRewrite: {
-      // '/devApi': ''
       ['^' + process.env.REACT_APP_API]: ''
     }
   }))

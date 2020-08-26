@@ -1,13 +1,16 @@
 import React, {Component} from 'react';
 import './index.scss';
-import { Form, Input, Button, Row, Col } from 'antd';
+import { Form, Input, Button, Row, Col, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { Login, GetCodeApi } from '@/api/account'
 
 class LoginForm extends Component {
   constructor(props){
     super(props)
-    this.state = {}
+    this.state = {
+      username: '',
+      codeLoading: false
+    }
   }
   onFinish = values => {
     console.log('Received values of form: ', values);
@@ -19,15 +22,36 @@ class LoginForm extends Component {
     this.props.switchForm('regiest')
   }
   getCode = () => {
+    if( !this.state.username) {
+      message.warning('用户名不能为空!!', 2)
+      return
+    }
+    this.setState({
+      codeLoading: true
+    })
     const data = {
-      usrname: '',
+      username: this.state.username,
       module: 'login'
     }
     GetCodeApi(data).then(res => {
       console.log(res, '获取验证码')
+      this.setState({
+        codeLoading: false
+      })
+    }).catch(() => {
+      this.setState({
+        codeLoading: false
+      })
+    })
+  }
+  inputChange = (e) => {
+    let value = e.target.value
+    this.setState({
+      username: value
     })
   }
   render() {
+    const { username, codeLoading } = this.state
     return (
       <div className="form-warp">
         <div>
@@ -48,7 +72,7 @@ class LoginForm extends Component {
                   { type: 'email', message: '请输入正确的邮箱!' }
                 ]
               }>
-                <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="email" />
+                <Input value={ username } onChange={ this.inputChange } prefix={<UserOutlined className="site-form-item-icon" />} placeholder="email" />
               </Form.Item>
               <Form.Item name="password" rules={
                 [
@@ -64,7 +88,7 @@ class LoginForm extends Component {
                     <Input prefix={<LockOutlined className="site-form-item-icon" />} placeholder="Code" />
                   </Col>
                   <Col span={9}>
-                    <Button type="danger" block onClick={ this.getCode }>获取验证码</Button>
+                    <Button type="danger" loading={codeLoading} block onClick={ this.getCode }>获取验证码</Button>
                   </Col>
                 </Row>
               </Form.Item>
