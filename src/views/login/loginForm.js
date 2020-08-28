@@ -4,12 +4,15 @@ import { Form, Input, Button, Row, Col, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { Login, GetCodeApi } from '@/api/account'
 
+// 409019683@qq.com
 class LoginForm extends Component {
   constructor(props){
     super(props)
     this.state = {
       username: '',
-      codeLoading: false
+      codeLoading: false,
+      btnDisabled: false,
+      btnText: '获取验证码'
     }
   }
   onFinish = values => {
@@ -27,7 +30,8 @@ class LoginForm extends Component {
       return
     }
     this.setState({
-      codeLoading: true
+      codeLoading: true,
+      btnText: '发送中...'
     })
     const data = {
       username: this.state.username,
@@ -36,13 +40,42 @@ class LoginForm extends Component {
     GetCodeApi(data).then(res => {
       console.log(res, '获取验证码')
       this.setState({
-        codeLoading: false
+        // codeLoading: false
       })
+      this.countDown()
     }).catch(() => {
       this.setState({
-        codeLoading: false
+        codeLoading: false,
+        btnText: '重新获取...'
       })
     })
+  }
+  /** 倒计时 */
+  countDown = () => {
+    let esc = 5
+    this.setState({
+      codeLoading: true,
+      btnDisabled: true,
+      btnText: `${esc}s`
+    })
+    let timer = null
+    timer = setInterval(() => {
+      // console.log(12323)
+      esc--
+      if (esc <= 0) {
+        clearInterval(timer)
+        this.setState({
+          btnDisabled: false,
+          codeLoading: false,
+          btnText: '重新获取...',
+        })
+        return
+      }
+      this.setState({
+        btnText: `${esc}s`
+      })
+    }, 1000);
+
   }
   inputChange = (e) => {
     let value = e.target.value
@@ -51,7 +84,7 @@ class LoginForm extends Component {
     })
   }
   render() {
-    const { username, codeLoading } = this.state
+    const { username, codeLoading, btnDisabled } = this.state
     return (
       <div className="form-warp">
         <div>
@@ -88,7 +121,7 @@ class LoginForm extends Component {
                     <Input prefix={<LockOutlined className="site-form-item-icon" />} placeholder="Code" />
                   </Col>
                   <Col span={9}>
-                    <Button type="danger" loading={codeLoading} block onClick={ this.getCode }>获取验证码</Button>
+                    <Button type="danger" loading={ codeLoading } disabled={ btnDisabled } block onClick={ this.getCode }>{this.state.btnText}</Button>
                   </Col>
                 </Row>
               </Form.Item>
