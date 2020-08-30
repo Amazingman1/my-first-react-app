@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
 import './index.scss';
-import { Form, Input, Button, Row, Col, message } from 'antd';
+import { Form, Input, Button, Row, Col } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import { Login, GetCodeApi } from '@/api/account'
+import { Login } from '@/api/account'
+import Code from '@/components/code/index'
 
 // 409019683@qq.com
 class LoginForm extends Component {
@@ -10,8 +11,6 @@ class LoginForm extends Component {
     super(props)
     this.state = {
       username: '',
-      codeLoading: false,
-      btnDisabled: false,
       btnText: '获取验证码'
     }
   }
@@ -24,59 +23,7 @@ class LoginForm extends Component {
   toogleForm = () => {
     this.props.switchForm('regiest')
   }
-  getCode = () => {
-    if( !this.state.username) {
-      message.warning('用户名不能为空!!', 2)
-      return
-    }
-    this.setState({
-      codeLoading: true,
-      btnText: '发送中...'
-    })
-    const data = {
-      username: this.state.username,
-      module: 'login'
-    }
-    GetCodeApi(data).then(res => {
-      console.log(res, '获取验证码')
-      this.setState({
-        // codeLoading: false
-      })
-      this.countDown()
-    }).catch(() => {
-      this.setState({
-        codeLoading: false,
-        btnText: '重新获取...'
-      })
-    })
-  }
-  /** 倒计时 */
-  countDown = () => {
-    let esc = 5
-    this.setState({
-      codeLoading: true,
-      btnDisabled: true,
-      btnText: `${esc}s`
-    })
-    let timer = null
-    timer = setInterval(() => {
-      // console.log(12323)
-      esc--
-      if (esc <= 0) {
-        clearInterval(timer)
-        this.setState({
-          btnDisabled: false,
-          codeLoading: false,
-          btnText: '重新获取...',
-        })
-        return
-      }
-      this.setState({
-        btnText: `${esc}s`
-      })
-    }, 1000);
-
-  }
+  // 处理输入框
   inputChange = (e) => {
     let value = e.target.value
     this.setState({
@@ -84,7 +31,7 @@ class LoginForm extends Component {
     })
   }
   render() {
-    const { username, codeLoading, btnDisabled } = this.state
+    const { username } = this.state
     return (
       <div className="form-warp">
         <div>
@@ -121,7 +68,7 @@ class LoginForm extends Component {
                     <Input prefix={<LockOutlined className="site-form-item-icon" />} placeholder="Code" />
                   </Col>
                   <Col span={9}>
-                    <Button type="danger" loading={ codeLoading } disabled={ btnDisabled } block onClick={ this.getCode }>{this.state.btnText}</Button>
+                    <Code username={username} />
                   </Col>
                 </Row>
               </Form.Item>

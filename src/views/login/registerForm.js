@@ -2,11 +2,14 @@ import React, {Component} from 'react';
 import './index.scss';
 import { Form, Input, Button, Row, Col } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import Code from '@/components/code/index'
 
 class registerForm extends Component {
   constructor(props){
     super(props)
-    this.state = {}
+    this.state = {
+      username: ''
+    }
   }
   onFinish = values => {
     console.log('Received values of form: ', values);
@@ -16,6 +19,7 @@ class registerForm extends Component {
   }
 
   render() {
+    const { username } = this.state
     return (
       <div className="form-warp">
         <div>
@@ -45,7 +49,7 @@ class registerForm extends Component {
                     <Input prefix={<LockOutlined className="site-form-item-icon" />} placeholder="Code" />
                   </Col>
                   <Col span={8}>
-                    <Button type="danger" block>获取验证码</Button>
+                    <Code username={username} />
                   </Col>
                 </Row>
               </Form.Item>
