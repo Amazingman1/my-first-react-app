@@ -11,6 +11,7 @@ class Code extends Component {
       btnText: '获取验证码',
       codeLoading: false,
       btnDisabled: false,
+      module: props.module
     }
   }
   // 监听父组件props函数
@@ -27,7 +28,7 @@ class Code extends Component {
     // 获取验证码
   getCode = () => {
     if( !this.state.username) {
-      message.warning('用户名不能为空!!', 2)
+      message.warning('用户名不能为空!!')
       return
     }
   
@@ -37,14 +38,16 @@ class Code extends Component {
     })
     const data = {
       username: this.state.username,
-      module: 'login'
+      module: this.state.module
     }
     GetCodeApi(data).then(res => {
       console.log(res, '获取验证码')
+      const { data } = res
+      message.success(data.message)
       this.setState({
-          // codeLoading: false
+        codeLoading: false
       })
-        this.countDown()
+      this.countDown()
     }).catch(() => {
       this.setState({
         codeLoading: false,

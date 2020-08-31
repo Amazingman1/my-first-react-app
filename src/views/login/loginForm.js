@@ -4,6 +4,7 @@ import { Form, Input, Button, Row, Col } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { Login } from '@/api/account'
 import Code from '@/components/code/index'
+import { validPassword } from '@/utils/vaildate'
 
 // 409019683@qq.com
 class LoginForm extends Component {
@@ -11,7 +12,8 @@ class LoginForm extends Component {
     super(props)
     this.state = {
       username: '',
-      btnText: '获取验证码'
+      btnText: '获取验证码',
+      module: 'login'
     }
   }
   onFinish = values => {
@@ -31,7 +33,7 @@ class LoginForm extends Component {
     })
   }
   render() {
-    const { username } = this.state
+    const { username, module } = this.state
     return (
       <div className="form-warp">
         <div>
@@ -57,10 +59,17 @@ class LoginForm extends Component {
               <Form.Item name="password" rules={
                 [
                   { required: true, message: '密码不能为空!' },
-                  { min: 6, message: "密码不能小于6位！" }
+                  ({ getFieldValue }) => ({
+                    validator(role, value){
+                      if(!validPassword(value)){
+                        return Promise.reject('请输入大于6位小于20位数字+字母')
+                      }
+                      return Promise.resolve()
+                    }
+                  })
                 ]
               }>
-                <Input prefix={<LockOutlined className="site-form-item-icon" />} placeholder="Password" />
+                <Input type="password" prefix={<LockOutlined className="site-form-item-icon" />} placeholder="Password" />
               </Form.Item>
               <Form.Item name="password" rules={[{ required: true, message: 'Please input your password!' }]}>
                 <Row gutter={13}>
@@ -68,7 +77,7 @@ class LoginForm extends Component {
                     <Input prefix={<LockOutlined className="site-form-item-icon" />} placeholder="Code" />
                   </Col>
                   <Col span={9}>
-                    <Code username={username} />
+                    <Code username={username} module={module} />
                   </Col>
                 </Row>
               </Form.Item>

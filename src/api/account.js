@@ -16,3 +16,11 @@ export function GetCodeApi(data) {
     data
   })
 }
+// 注册
+export function RegisterApi(data) {
+  return request({
+    url: `/register/`,
+    method: 'post',
+    data
+  })
+}

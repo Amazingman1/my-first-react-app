@@ -3,12 +3,18 @@ import './index.scss';
 import { Form, Input, Button, Row, Col } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import Code from '@/components/code/index'
+import { validPassword } from '@/utils/vaildate'
+import { RegisterApi } from '@/api/account'
+
 
 class registerForm extends Component {
   constructor(props){
     super(props)
     this.state = {
-      username: ''
+      username: '',
+      module: 'register',
+      code: '',
+      password: ''
     }
   }
   onFinish = values => {
@@ -17,9 +23,37 @@ class registerForm extends Component {
   toogleForm = () => {
     this.props.switchForm('login')
   }
+  // 处理输入框
+  inputChange = (e) => {
+    let value = e.target.value
+    this.setState({
+      username: value
+    })
+  }
+  inputPass = (e) => {
+    let value = e.target.value
+    this.setState({
+      password: value
+    })
+  }
+  inputCode = (e) => {
+    let value = e.target.value
+    this.setState({
+      code: value
+    })
+  }
+  onFinish = () => {
+    const data ={
+      username:this.state.username,
+      password: this.state.password,
+      code:this.state.code
+    }
+    RegisterApi(data).then(res => {
 
+    })
+  } 
   render() {
-    const { username } = this.state
+    const { username, module } = this.state
     return (
       <div className="form-warp">
         <div>
@@ -35,26 +69,50 @@ class registerForm extends Component {
               onFinish={this.onFinish}
             >
               <Form.Item name="username" rules={[{ required: true, message: 'Please input your Username!' }]}>
-                <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
+                <Input onChange={this.inputChange} prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
               </Form.Item>
-              <Form.Item name="password" rules={[{ required: true, message: 'Please input your password!' }]}>
-                <Input prefix={<LockOutlined className="site-form-item-icon" />} placeholder="Password" />
+              <Form.Item name="password" rules={[
+                { required: true, message: '密码不能为空!' },
+                ({ getFieldValue }) => ({
+                  validator(role, value){
+                    const passworldValue = getFieldValue('passwords')
+                    if(!validPassword(value)){
+                      return Promise.reject('请输入大于6位小于20位数字+字母')
+                    }
+                    if (passworldValue && value !== passworldValue){
+                      return Promise.reject('两次密码不一致！')
+                    }
+                    return Promise.resolve()
+                  }
+                })
+              ]}>
+                <Input onChange={this.inputPass} type="password" prefix={<LockOutlined className="site-form-item-icon" />} placeholder="Password" />
               </Form.Item>
-              <Form.Item name="passwords" rules={[{ required: true, message: 'Please input your passwords!' }]}>
-                <Input prefix={<LockOutlined className="site-form-item-icon" />} placeholder="Passwords" />
+              <Form.Item name="passwords" rules={[
+                { required: true, message: '再次确认密码不能为空！' },
+                ({ getFieldValue }) => ({
+                  validator(role, value){
+                    if(value !== getFieldValue('password') ){
+                      return Promise.reject('两次密码不一致！！')
+                    }
+                    return Promise.resolve()
+                  }
+                })
+              ]}>
+                <Input type="password" prefix={<LockOutlined className="site-form-item-icon" />} placeholder="Passwords" />
               </Form.Item>
-              <Form.Item name="code" rules={[{ required: true, message: 'Please input your Code!' }]}>
+              <Form.Item name="code" rules={[{ required: true, message: '请输入6位验证码', len: 6 }]}>
                 <Row gutter={13}>
-                  <Col span={16}>
-                    <Input prefix={<LockOutlined className="site-form-item-icon" />} placeholder="Code" />
+                  <Col span={15}>
+                    <Input onChange={this.inputCode} prefix={<LockOutlined className="site-form-item-icon" />} placeholder="Code" />
                   </Col>
-                  <Col span={8}>
-                    <Code username={username} />
+                  <Col span={9}>
+                    <Code username={username} module={module} />
                   </Col>
                 </Row>
               </Form.Item>
               <Form.Item>
-                <Button type="primary" htmlType="submit" className="login-form-button" block>登 陆</Button>
+                <Button onClick={this.onFinish} type="primary" htmlType="submit" className="login-form-button" block>注 册</Button>
               </Form.Item>
             </Form>
           </div>
