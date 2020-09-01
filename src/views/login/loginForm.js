@@ -5,6 +5,7 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { Login } from '@/api/account'
 import Code from '@/components/code/index'
 import { validPassword } from '@/utils/vaildate'
+import CryptoJs from 'crypto-js'
 
 // 409019683@qq.com
 class LoginForm extends Component {
@@ -13,13 +14,30 @@ class LoginForm extends Component {
     this.state = {
       username: '',
       btnText: '获取验证码',
-      module: 'login'
+      module: 'login',
+      code: '',
+      password: '',
+      longLoading: false
     }
   }
   onFinish = values => {
-    console.log('Received values of form: ', values);
-    Login().then(res => {
+    this.setState({
+      longLoading: true
+    })
+    const data = {
+      username:this.state.username,
+      password: CryptoJs.MD5(this.state.password).toString(),
+      code:this.state.code
+    }
+    Login(data).then(res => {
       console.log(res, '登陆')
+      this.setState({
+        longLoading: false
+      })
+    }).catch(() => {
+      this.setState({
+        longLoading: false
+      })
     })
   }
   toogleForm = () => {
@@ -30,6 +48,18 @@ class LoginForm extends Component {
     let value = e.target.value
     this.setState({
       username: value
+    })
+  }
+  inputPass = (e) => {
+    let value = e.target.value
+    this.setState({
+      password: value
+    })
+  }
+  inputCode = (e) => {
+    let value = e.target.value
+    this.setState({
+      code: value
     })
   }
   render() {
@@ -69,12 +99,12 @@ class LoginForm extends Component {
                   })
                 ]
               }>
-                <Input type="password" prefix={<LockOutlined className="site-form-item-icon" />} placeholder="Password" />
+                <Input type="password" onChange={this.inputPass} prefix={<LockOutlined className="site-form-item-icon" />} placeholder="Password" />
               </Form.Item>
               <Form.Item name="password" rules={[{ required: true, message: 'Please input your password!' }]}>
                 <Row gutter={13}>
                   <Col span={15}>
-                    <Input prefix={<LockOutlined className="site-form-item-icon" />} placeholder="Code" />
+                    <Input onChange={this.inputCode} prefix={<LockOutlined className="site-form-item-icon" />} placeholder="Code" />
                   </Col>
                   <Col span={9}>
                     <Code username={username} module={module} />
@@ -82,7 +112,7 @@ class LoginForm extends Component {
                 </Row>
               </Form.Item>
               <Form.Item>
-                <Button type="primary" htmlType="submit" className="login-form-button" block>登 陆</Button>
+                <Button type="primary" loading={this.state.longLoading} htmlType="submit" className="login-form-button" block>登 陆</Button>
               </Form.Item>
             </Form>
           </div>

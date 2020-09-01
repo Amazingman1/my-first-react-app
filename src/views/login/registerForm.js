@@ -5,7 +5,7 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import Code from '@/components/code/index'
 import { validPassword } from '@/utils/vaildate'
 import { RegisterApi } from '@/api/account'
-
+import CryptoJs from 'crypto-js'
 
 class registerForm extends Component {
   constructor(props){
@@ -45,11 +45,11 @@ class registerForm extends Component {
   onFinish = () => {
     const data ={
       username:this.state.username,
-      password: this.state.password,
+      password: CryptoJs.MD5(this.state.password).toString(),
       code:this.state.code
     }
     RegisterApi(data).then(res => {
-
+      this.toogleForm()
     })
   } 
   render() {
