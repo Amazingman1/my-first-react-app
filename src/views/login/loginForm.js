@@ -6,6 +6,8 @@ import { Login } from '@/api/account'
 import Code from '@/components/code/index'
 import { validPassword } from '@/utils/vaildate'
 import CryptoJs from 'crypto-js'
+import { withRouter } from 'react-router-dom'
+import { setToken } from '@/utils/session'
 
 // 409019683@qq.com
 class LoginForm extends Component {
@@ -34,6 +36,9 @@ class LoginForm extends Component {
       this.setState({
         longLoading: false
       })
+      const data = res.data.data
+      setToken(data.token)
+      this.props.history.push('/index')
     }).catch(() => {
       this.setState({
         longLoading: false
@@ -121,4 +126,4 @@ class LoginForm extends Component {
     )
   }
 }
-export default LoginForm
+export default withRouter(LoginForm)
