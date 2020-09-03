@@ -5,6 +5,8 @@ import LayoutAside from './components/aside'
 import LayoutHeader from './components/header'
 import ContainerMain from '@/components/containerMain/index'
 import './layout.scss';
+// import PrivateRouter from './components/privateRouter/index'
+
 
 const {Sider, Header, Content } = Layout
 
