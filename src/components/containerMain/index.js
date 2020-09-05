@@ -1,8 +1,8 @@
 import React from 'react';
 import { Switch } from 'react-router-dom'
-import User from '@/views/user/index'
-import AddUser from '@/views/user/add'
+
 import PrivateRouter from '@/components/privateRouter/index'
+import pathList from './components'
 
 class ContainerMain extends React.Component{
   constructor(props){
@@ -12,8 +12,13 @@ class ContainerMain extends React.Component{
   render(){
     return(
       <Switch>
-        <PrivateRouter exact path='/index/user/list' component={User} />
-        <PrivateRouter exact path='/index/user/add' component={AddUser} />
+        {
+          pathList.map(p => {
+            return <PrivateRouter exact key={p.path} path={p.path} component={p.component} />
+          })
+          
+        }
+    
       </Switch>
     )
   }
