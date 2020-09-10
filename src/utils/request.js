@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { getToken } from '@/utils/cookies'
 
 const service = axios.create({
   baseURL: process.env.REACT_APP_API,
@@ -6,7 +7,7 @@ const service = axios.create({
 })
 service.interceptors.request.use(
   config => {
- 
+    config.headers['token'] = getToken()
     return config
   },
   error => {
