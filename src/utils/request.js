@@ -1,5 +1,6 @@
 import axios from 'axios'
-import { getToken } from '@/utils/cookies'
+import { getToken, getUsername } from '@/utils/cookies'
+import { message } from 'antd'
 
 const service = axios.create({
   baseURL: process.env.REACT_APP_API,
@@ -7,7 +8,8 @@ const service = axios.create({
 })
 service.interceptors.request.use(
   config => {
-    config.headers['token'] = getToken()
+    config.headers['Token'] = getToken()
+    config.headers['Username'] = getUsername()
     return config
   },
   error => {
@@ -17,7 +19,12 @@ service.interceptors.request.use(
 )
 service.interceptors.response.use(
   response => {
-    return response
+    const { data } = response
+    if(data.resCode !==  0 ){
+      message.error(data.message)
+      // return Promise.reject(new Error(data.message || 'Error'))
+    }
+    return data
   },
   error => {
     console.log('err' + error) // for debug

@@ -8,3 +8,12 @@ export function AddDepartment(data) {
     data
   })
 }
+
+// 获取
+export function GetDepartmentApi(data) {
+  return request({
+    url: `/department/list/`,
+    method: 'post',
+    data
+  })
+}

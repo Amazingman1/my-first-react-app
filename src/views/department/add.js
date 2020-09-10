@@ -1,11 +1,14 @@
 import React, { Component } from 'react'
 import {Form, Input, Radio, Button, InputNumber} from 'antd'
 import {AddDepartment} from '@/api/department.js'
+import { message } from 'antd'
+
 
 class DepartmentAdd extends Component {
     constructor(props){
         super(props)
         this.state = {
+            loading: false,
             formLaout: {
                 labelCol: {span:3},
                 wrapperCol: {span: 12}
@@ -14,13 +17,25 @@ class DepartmentAdd extends Component {
     }
     onSubmit = (val) => {
         console.log(val)
+        this.setState({
+            loading: true
+        })
         AddDepartment(val).then(res => {
             console.log(res, '保存结果')
+            message.success('添加成功!')
+            this.setState({
+                loading: false
+            })
+            this.refs.form.resetFields()
+        }).catch(() => {
+            this.setState({
+                loading: false
+            })
         })
     }
     render() {
         return (
-            <Form onFinish={this.onSubmit} {...this.state.formLaout}>
+            <Form ref="form" initialValues={{number: 0, status: true}} onFinish={this.onSubmit} {...this.state.formLaout}>
                 <Form.Item label="部门名称:" name="name">
                     <Input />
                 </Form.Item>
@@ -28,7 +43,7 @@ class DepartmentAdd extends Component {
                     <InputNumber min={0} max={100} />
                 </Form.Item>
                 <Form.Item label="禁启用:" name="status">
-                    <Radio.Group defaultValue={true}>
+                    <Radio.Group>
                         <Radio value={false}>禁用</Radio>
                         <Radio value={true}>启用</Radio>
                     </Radio.Group>
@@ -37,9 +52,8 @@ class DepartmentAdd extends Component {
                     <Input.TextArea />
                 </Form.Item>
                 <Form.Item>
-                    <Button type="primary" htmlType="submit">确定</Button>
+                    <Button loading={this.state.loading} type="primary" htmlType="submit">确定</Button>
                 </Form.Item>
-       
             </Form>
         )
     }
