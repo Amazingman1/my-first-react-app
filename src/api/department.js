@@ -26,3 +26,11 @@ export function ChangeStatustApi(data) {
     data
   })
 }
+// 删除/批量删除 /department/delete/
+export function DeleteDepartmentApi(data) {
+  return request({
+    url: `/department/delete/`,
+    method: 'post',
+    data
+  })
+}

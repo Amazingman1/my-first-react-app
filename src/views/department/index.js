@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import { Form, Input, Button, Table, Switch } from 'antd'
-import { GetDepartmentApi, ChangeStatustApi } from '@/api/department'
+import { GetDepartmentApi, ChangeStatustApi, DeleteDepartmentApi } from '@/api/department'
 class DepartmentIndex extends Component {
     constructor(props){
         super(props)
@@ -45,6 +45,12 @@ class DepartmentIndex extends Component {
         ChangeStatustApi({id: rowData.id, status: !Number(rowData.status)}).then(res => {
             console.log('修改结果')
             this.getList()
+        })
+    }
+    // 删除
+    deleteDepartment = ()=> {
+        DeleteDepartmentApi().then(res => {
+            console.log('')
         })
     }
     // 声明周期 DOM 挂载完成
