@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import { Form, Input, Button, Table, Switch } from 'antd'
-import { GetDepartmentApi } from '@/api/department'
+import { GetDepartmentApi, ChangeStatustApi } from '@/api/department'
 class DepartmentIndex extends Component {
     constructor(props){
         super(props)
@@ -39,6 +39,13 @@ class DepartmentIndex extends Component {
             pageSize: 10,
             keyWork: ''
         }
+    }
+    onHandlerSwitch = (rowData) => {
+        console.log(rowData, '开关')
+        ChangeStatustApi({id: rowData.id, status: !Number(rowData.status)}).then(res => {
+            console.log('修改结果')
+            this.getList()
+        })
     }
     // 声明周期 DOM 挂载完成
     componentDidMount() {

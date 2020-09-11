@@ -17,3 +17,12 @@ export function GetDepartmentApi(data) {
     data
   })
 }
+
+// 禁用启用 /department/status/
+export function ChangeStatustApi(data) {
+  return request({
+    url: `/department/status/`,
+    method: 'post',
+    data
+  })
+}
