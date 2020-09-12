@@ -26,7 +26,6 @@ class DepartmentIndex extends Component {
                             <div className="inline-button">
                                 <Button type="primary">
                                 编辑
-                                    {/* <Link to={{ pathname: '/index/department/add', state:{ id: rowData.id}}}>编辑</Link> */}
                                 </Button>
                                 <Button>删除</Button>
                             </div>
@@ -95,7 +94,7 @@ class DepartmentIndex extends Component {
                         <Button type="primary" htmlType="submit">搜索</Button>
                     </Form.Item>
                 </Form>
-                <Table rowKey="id" columns={columns} dataSource={data} bordered />
+                <Table rowSelection rowKey="id" columns={columns} dataSource={data} bordered />
             </Fragment>
         )
     }

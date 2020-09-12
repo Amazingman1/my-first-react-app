@@ -12,6 +12,7 @@ import { setToken, setUsername } from '@/utils/cookies'
 // 409019683@qq.com
 class LoginForm extends Component {
   constructor(props){
+    // @ts-ignore
     super(props)
     this.state = {
       username: '',
@@ -36,7 +37,7 @@ class LoginForm extends Component {
       this.setState({
         longLoading: false
       })
-      const data = res.data.data
+      const { data } = res
       setToken(data.token)
       setUsername(data.username)
       this.props.history.push('/index')

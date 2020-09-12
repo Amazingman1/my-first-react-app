@@ -42,8 +42,7 @@ class Code extends Component {
     }
     GetCodeApi(data).then(res => {
       console.log(res, '获取验证码')
-      const { data } = res
-      message.success(data.message)
+      message.success(res.message)
       this.setState({
         codeLoading: false
       })
