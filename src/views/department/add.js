@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import {Form, Input, Radio, Button, InputNumber} from 'antd'
-import {AddDepartment} from '@/api/department.js'
+import {AddDepartment, DetailedApi, EditdApi} from '@/api/department'
+
 import { message } from 'antd'
 
 
@@ -12,16 +13,19 @@ class DepartmentAdd extends Component {
             formLaout: {
                 labelCol: {span:3},
                 wrapperCol: {span: 12}
-            }
+            },
+            id: ''
         }
     }
     onSubmit = (val) => {
-        console.log(val)
         this.setState({
             loading: true
         })
+        this.state.id ? this.editDepartment(val) : this.addDepartment(val)
+    }
+    // 新增
+    addDepartment = (val) => {
         AddDepartment(val).then(res => {
-            console.log(res, '保存结果')
             message.success('添加成功!')
             this.setState({
                 loading: false
@@ -31,6 +35,36 @@ class DepartmentAdd extends Component {
             this.setState({
                 loading: false
             })
+        })
+    }
+    editDepartment = (val) => {
+        EditdApi({...val, id: this.state.id}).then(res => {
+            message.success('修改成功!')
+            this.setState({
+                loading: false
+            })
+        }).catch(() => {
+            this.setState({
+                loading: false
+            })
+        })
+    }
+    componentWillMount(){
+        console.log(this.props.location.state, 999)
+        if(this.props.location.state) {
+            this.setState({
+                id: this.props.location.state.id
+            })
+        }
+    }
+    componentDidMount() {
+        this.getDetail()
+    }
+    getDetail = () => {
+        if ( !this.props.location.state)  { return false }
+        DetailedApi({id: this.props.location.state.id }).then(res => {
+            console.log(res)
+            this.refs.form.setFieldsValue(res.data)
         })
     }
     render() {

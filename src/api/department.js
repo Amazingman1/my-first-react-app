@@ -34,3 +34,20 @@ export function DeleteDepartmentApi(data) {
     data
   })
 }
+// 部门详情
+export function DetailedApi(data) {
+  return request({
+    url: `/department/detailed/`,
+    method: 'post',
+    data
+  })
+}
+
+// 部门编辑
+export function EditdApi(data) {
+  return request({
+    url: `/department/edit/`,
+    method: 'post',
+    data
+  })
+}
