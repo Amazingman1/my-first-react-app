@@ -1,0 +1,13 @@
+@import './saccConfig.scss';
+@import './normalize.scss';
+body {
+  background-color: #001529 !important;
+}
+.inline-button{
+  button + button{ margin-left: 10px}
+}
+.table-wrap {
+  padding: 30px 0;
+}
+.text-center { text-align: center; }
+.color-red { color: #ff0000 }
